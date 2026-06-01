@@ -7,12 +7,13 @@ const { requireLogin } = require('../middleware/auth');
 router.post('/', requireLogin, (req, res) => {
   const { event_id } = req.body;
   const student_id = req.session.user.id;
+  const parsedEventId = Number(event_id);
 
   if (req.session.user.role === 'admin') {
     return res.status(403).json({ message: 'Admins cannot register for events.' });
   }
 
-  if (!event_id) {
+  if (!Number.isInteger(parsedEventId) || parsedEventId <= 0) {
     return res.status(400).json({ message: 'Event ID is required.' });
   }
 
@@ -27,7 +28,7 @@ router.post('/', requireLogin, (req, res) => {
     GROUP BY e.id
   `;
 
-  db.query(eventQuery, [event_id], (err, results) => {
+  db.query(eventQuery, [parsedEventId], (err, results) => {
     if (err) {
       return res.status(500).json({ message: 'Database error.' });
     }
@@ -44,7 +45,7 @@ router.post('/', requireLogin, (req, res) => {
 
     // Check duplicate registration
     const dupQuery = 'SELECT * FROM registrations WHERE student_id = ? AND event_id = ?';
-    db.query(dupQuery, [student_id, event_id], (err, dupResults) => {
+    db.query(dupQuery, [student_id, parsedEventId], (err, dupResults) => {
       if (err) {
         return res.status(500).json({ message: 'Database error.' });
       }
@@ -54,8 +55,11 @@ router.post('/', requireLogin, (req, res) => {
 
       // All good — register
       const insertQuery = 'INSERT INTO registrations (student_id, event_id) VALUES (?, ?)';
-      db.query(insertQuery, [student_id, event_id], (err, result) => {
+      db.query(insertQuery, [student_id, parsedEventId], (err, result) => {
         if (err) {
+          if (err.code === 'ER_DUP_ENTRY') {
+            return res.status(400).json({ message: 'You have already registered for this event.' });
+          }
           return res.status(500).json({ message: 'Database error.' });
         }
         return res.status(201).json({ message: 'Registered successfully.' });

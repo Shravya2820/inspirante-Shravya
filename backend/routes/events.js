@@ -3,6 +3,15 @@ const router = express.Router();
 const db = require('../db');
 const { requireLogin, requireAdmin } = require('../middleware/auth');
 
+function isValidEventDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+
+  const parsed = new Date(`${value}T00:00:00`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
+
 // GET /api/events - get all events with registration count
 router.get('/', requireLogin, (req, res) => {
   const query = `
@@ -30,14 +39,26 @@ router.get('/', requireLogin, (req, res) => {
 // POST /api/events - admin creates a new event
 router.post('/', requireAdmin, (req, res) => {
   const { name, date, venue, capacity } = req.body;
+  const parsedCapacity = Number(capacity);
 
   if (!name || !date || !venue || !capacity) {
     return res.status(400).json({ message: 'All fields are required.' });
   }
 
+  if (!isValidEventDate(date)) {
+    return res.status(400).json({ message: 'Date must be in YYYY-MM-DD format.' });
+  }
+
+  if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
+    return res.status(400).json({ message: 'Capacity must be a positive whole number.' });
+  }
+
   const query = 'INSERT INTO events (name, date, venue, capacity) VALUES (?, ?, ?, ?)';
-  db.query(query, [name, date, venue, capacity], (err, result) => {
+  db.query(query, [name.trim(), date, venue.trim(), parsedCapacity], (err, result) => {
     if (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({ message: 'An event with this name and date already exists.' });
+      }
       return res.status(500).json({ message: 'Database error.' });
     }
     return res.status(201).json({

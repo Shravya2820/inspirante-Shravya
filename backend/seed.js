@@ -1,4 +1,6 @@
 const db = require('./db');
+const { promisify } = require('util');
+const query = promisify(db.query).bind(db);
 
 const users = [
   { name: 'Admin', username: 'admin', password: 'inspirante2026', role: 'admin' },
@@ -24,22 +26,28 @@ const events = [
 ];
 
 async function seed() {
-  for (const user of users) {
-    db.query(
-      'INSERT IGNORE INTO users (name, username, password, role) VALUES (?, ?, ?, ?)',
-      [user.name, user.username, user.password, user.role]
-    );
-  }
+  try {
+    for (const user of users) {
+      await query(
+        'INSERT IGNORE INTO users (name, username, password, role) VALUES (?, ?, ?, ?)',
+        [user.name, user.username, user.password, user.role]
+      );
+    }
 
-  for (const event of events) {
-    db.query(
-      'INSERT IGNORE INTO events (name, date, venue, capacity) VALUES (?, ?, ?, ?)',
-      [event.name, event.date, event.venue, event.capacity]
-    );
-  }
+    for (const event of events) {
+      await query(
+        'INSERT IGNORE INTO events (name, date, venue, capacity) VALUES (?, ?, ?, ?)',
+        [event.name, event.date, event.venue, event.capacity]
+      );
+    }
 
-  console.log('Seeding done');
-  setTimeout(() => db.end(), 500);
+    console.log('Seeding done');
+  } catch (err) {
+    console.error('Seeding failed:', err);
+    process.exitCode = 1;
+  } finally {
+    db.end();
+  }
 }
 
 seed();

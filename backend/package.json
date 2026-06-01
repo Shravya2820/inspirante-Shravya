@@ -4,8 +4,9 @@
   "description": "",
   "main": "db.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed": "node seed.js",
+    "test": "node --check server.js && node --check seed.js && node --check routes/auth.js && node --check routes/events.js && node --check routes/registrations.js && node --check middleware/auth.js"
   },
   "keywords": [],
   "author": "",
