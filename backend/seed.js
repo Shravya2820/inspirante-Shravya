@@ -27,21 +27,27 @@ const events = [
 
 async function seed() {
   try {
+    await query('SET FOREIGN_KEY_CHECKS = 0');
+    await query('TRUNCATE TABLE registrations');
+    await query('TRUNCATE TABLE events');
+    await query('TRUNCATE TABLE users');
+    await query('SET FOREIGN_KEY_CHECKS = 1');
+
     for (const user of users) {
       await query(
-        'INSERT IGNORE INTO users (name, username, password, role) VALUES (?, ?, ?, ?)',
+        'INSERT INTO users (name, username, password, role) VALUES (?, ?, ?, ?)',
         [user.name, user.username, user.password, user.role]
       );
     }
 
     for (const event of events) {
       await query(
-        'INSERT IGNORE INTO events (name, date, venue, capacity) VALUES (?, ?, ?, ?)',
+        'INSERT INTO events (name, date, venue, capacity) VALUES (?, ?, ?, ?)',
         [event.name, event.date, event.venue, event.capacity]
       );
     }
 
-    console.log('Seeding done');
+    console.log('Database reset and seeded');
   } catch (err) {
     console.error('Seeding failed:', err);
     process.exitCode = 1;
