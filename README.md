@@ -168,6 +168,15 @@ All other student accounts specified in the assignment are included in the seed 
 * Responsive UI
 * User-friendly error handling
 
+## Project Structure
+
+```text
+backend/
+frontend/
+README.md
+DECISIONS.md
+```
+
 ## Useful Commands
 
 Run tests:
