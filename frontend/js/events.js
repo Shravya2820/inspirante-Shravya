@@ -1,4 +1,7 @@
-const API_BASE_URL = `http://${window.location.hostname}:3000/api`;
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isLocal
+  ? `http://${window.location.hostname}:3000/api`
+  : 'https://inspirante-shravya.onrender.com/api';
 
 export async function apiRequest(path, options = {}) {
   try {

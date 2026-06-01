@@ -10,7 +10,8 @@ const allowedOrigins = [
   'http://127.0.0.1:5500',
   'http://localhost:5500',
   'http://127.0.0.1:3001',
-  'http://localhost:3001'
+  'http://localhost:3001',
+  'https://inspirante-shravya.vercel.app'
 ];
 
 app.use(cors({
@@ -26,8 +27,14 @@ app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production'
+  }
 }));
+
+app.get('/', (req, res) => res.json({ status: 'Inspirante API is running' }));
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/events', require('./routes/events'));
