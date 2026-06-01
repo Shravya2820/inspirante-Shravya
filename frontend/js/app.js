@@ -227,7 +227,7 @@ function renderStudent() {
           ${isFull ? '<span class="status full">Full</span>' : ''}
           ${isRegistered ? '<span class="status registered">Registered</span>' : ''}
           <button class="register-button" data-event-id="${event.id}" type="button" ${isFull ? 'disabled' : ''}>
-            ${isRegistered ? 'Register again' : 'Register'}
+            ${isRegistered ? 'Register' : 'Register'}
           </button>
         </div>
       </article>
