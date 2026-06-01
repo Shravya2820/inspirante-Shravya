@@ -2,6 +2,17 @@
 
 A full-stack web application built for the Inspirante Web Development Internship Assignment. The portal allows administrators to manage events and students to register for them.
 
+## Live Demo
+
+| | URL |
+|---|---|
+| Frontend | https://inspirante-shravya.vercel.app |
+| Backend API | https://inspirante-shravya.onrender.com |
+
+> The live demo uses a cloud MySQL database (Aiven) — no local setup needed to try it out.
+
+---
+
 ## Tech Stack
 
 * Frontend: HTML, CSS, JavaScript
@@ -9,378 +20,248 @@ A full-stack web application built for the Inspirante Web Development Internship
 * Database: MySQL
 * Authentication: Session-based authentication
 
+---
+
 ## Prerequisites
 
-Before running the project, install:
+Make sure the following are installed on your machine:
 
-* Node.js
-* MySQL Server
-* VS Code Live Server extension (or any static file server)
+* [Node.js](https://nodejs.org) (v18 or above)
+* [MySQL Server](https://dev.mysql.com/downloads/mysql/) (v8 or above)
+* [Git](https://git-scm.com)
+* VS Code with the [Live Server extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) — or any static file server
 
-## Setup Instructions
+---
 
-### 1. Clone the Repository
+## Local Setup — Step by Step
+
+### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/Shravya2820/inspirante-Shravya.git
 cd inspirante-Shravya
 ```
 
-### 2. Create the Database
+---
+
+### Step 2: Set Up the Database
+
+Open your MySQL client and run:
 
 ```sql
-CREATE DATABASE inspirante_db;
+CREATE DATABASE IF NOT EXISTS inspirante_db;
 ```
 
-Import the schema:
+Then import the schema.
 
-#### macOS/Linux
-
+**macOS / Linux:**
 ```bash
 mysql -u root -p inspirante_db < backend/schema.sql
 ```
 
-#### Windows (PowerShell)
-
-```powershell
-cmd /c "mysql -u root -p inspirante_db < backend\schema.sql"
+**Windows (Command Prompt):**
+```cmd
+mysql -u root -p inspirante_db < backend\schema.sql
 ```
 
-### 3. Configure Environment Variables
-
-#### macOS/Linux
-
-```bash
-cp backend/.env.example backend/.env
-```
-
-#### Windows (PowerShell)
-
-```powershell
-copy backend\.env.example backend\.env
-```
-
-Update `backend/.env`:
-
-```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=inspirante_db
-SESSION_SECRET=your-secret-key
-PORT=3000
-```
-
-### 4. Install Dependencies
-
-```bash
-cd backend
-```
-
-#### macOS/Linux
-
-```bash
-npm install
-```
-
-#### Windows (PowerShell)
-
-```powershell
-npm.cmd install
-```
-
-### 5. Seed the Database
-
-#### macOS/Linux
-
-```bash
-npm run seed
-```
-
-#### Windows (PowerShell)
-
-```powershell
-npm.cmd run seed
-```
-
-### 6. Start the Backend
-
-#### macOS/Linux
-
-```bash
-npm start
-```
-
-#### Windows (PowerShell)
-
-```powershell
-npm.cmd start
-```
-
-The API will run at:
-
-```text
-http://localhost:3000
-```
-
-### 7. Start the Frontend
-
-Open the `frontend` folder using VS Code Live Server and open `index.html`.
-
-### 8. Login Credentials
-
-#### Admin
-
-* Username: admin
-* Password: inspirante2026
-
-#### Student
-
-* Username: asha.rao
-* Password: student123
-
-All other student accounts specified in the assignment are included in the seed data.
-
-## Features
-
-### Admin
-
-* Login
-* Create events
-* View all events
-* View registrations for an event
-* Capacity percentage with required color coding
-
-### Student
-
-* Login
-* Browse upcoming events
-* Events sorted by date
-* Register for events
-* Duplicate registration prevention
-* View personal registrations
-
-### System
-
-* Session-based authentication
-* REST API using `/api/*` routes
-* MySQL data persistence
-* Responsive UI
-* User-friendly error handling
-
-## Project Structure
-
-```text
-backend/
-frontend/
-README.md
-DECISIONS.md
-```
-
-## Useful Commands
-
-Run tests:
-
-```powershell
-cd backend
-npm.cmd test
-```
-
-Reset sample data:
-
-```powershell
-cd backend
-npm.cmd run seed
-```
-
-## Known Limitations
-
-* Passwords are stored in plain text because user registration was not required.
-* The default Express session store is used and is suitable only for development environments.
-
-
-# College Event Registration Portal
-
-A full-stack web application built for the Inspirante Web Development Internship Assignment.
-
-The portal allows administrators to create and manage events, while students can browse events and register for them.
-
-## Tech Stack
-
-* Frontend: HTML, CSS, JavaScript
-* Backend: Node.js + Express.js
-* Database: MySQL
-* Authentication: Session-based authentication
-
-## Prerequisites
-
-Before running the project, make sure the following are installed:
-
-* Node.js
-* MySQL Server
-* VS Code Live Server extension (or any static file server)
-
-> Note: On Windows PowerShell, use `npm.cmd` instead of `npm` if script execution is blocked.
-
----
-
-## Setup Instructions
-
-### Step 1: Clone the Repository
-
-```powershell
-git clone <repository-url>
-cd inspirante-shravya
-```
-
-### Step 2: Create the Database
-
-Open MySQL and run:
-
-```sql
-CREATE DATABASE inspirante_db;
-```
-
-Then import the schema:
-
+**Windows (PowerShell):**
 ```powershell
 cmd /c "mysql -u root -p inspirante_db < backend\schema.sql"
 ```
 
 Enter your MySQL password when prompted.
 
+---
+
 ### Step 3: Configure Environment Variables
 
-Copy the example environment file:
+**macOS / Linux:**
+```bash
+cp backend/.env.example backend/.env
+```
 
-```powershell
+**Windows (Command Prompt):**
+```cmd
 copy backend\.env.example backend\.env
 ```
 
-Open `backend\.env` and update the values:
+**Windows (PowerShell):**
+```powershell
+Copy-Item backend\.env.example backend\.env
+```
+
+Now open `backend/.env` and fill in your MySQL credentials:
 
 ```env
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=inspirante_db
-SESSION_SECRET=your-secret-key
+DB_PORT=3306
+SESSION_SECRET=any-random-string-you-choose
 PORT=3000
+NODE_ENV=development
 ```
+
+> `SESSION_SECRET` can be any random string — for example `mySecretKey123`. It just needs to be set.
+
+---
 
 ### Step 4: Install Dependencies
 
-```powershell
+```bash
 cd backend
-npm.cmd install
+npm install
 ```
+
+---
 
 ### Step 5: Seed the Database
 
-This creates the sample users and events required for the assignment.
+This populates the database with sample users and events.
 
-```powershell
-npm.cmd run seed
+```bash
+npm run seed
 ```
 
-### Step 6: Start the Backend Server
-
-```powershell
-npm.cmd start
+You should see:
+```
+MySQL connected
+Database reset and seeded
 ```
 
-The API will run at:
+---
 
-```text
-http://localhost:3000
+### Step 6: Start the Backend
+
+```bash
+npm start
 ```
+
+You should see:
+```
+Server running on port 3000
+MySQL connected
+```
+
+The API is now running at `http://localhost:3000`.
+
+---
 
 ### Step 7: Start the Frontend
 
-Open the `frontend` folder using VS Code Live Server.
+1. Open the `frontend` folder in VS Code
+2. Right-click `index.html` → **Open with Live Server**
 
-The frontend will open in the browser at:
+The app will open in your browser at `http://127.0.0.1:5500`.
 
-```text
-http://127.0.0.1:5500
-```
+---
 
 ### Step 8: Log In
 
-#### Admin Account
+**Admin:**
+| Username | Password |
+|---|---|
+| `admin` | `inspirante2026` |
 
-Username: `admin`
-
-Password: `inspirante2026`
-
-#### Student Account
-
-Username: `asha.rao`
-
-Password: `student123`
-
-Additional student accounts from the assignment are included in the seed file.
+**Student (any of these):**
+| Name | Username | Password |
+|---|---|---|
+| Asha Rao | `asha.rao` | `student123` |
+| Ravi Shetty | `ravi.shetty` | `student123` |
+| Meera Nair | `meera.nair` | `student123` |
+| Kiran Bhat | `kiran.bhat` | `student123` |
+| Divya Kamath | `divya.kamath` | `student123` |
+| Suresh Pai | `suresh.pai` | `student123` |
+| Ananya Hegde | `ananya.hegde` | `student123` |
+| Rohan Shenoy | `rohan.shenoy` | `student123` |
+| Nisha Prabhu | `nisha.prabhu` | `student123` |
+| Tejas Mallya | `tejas.mallya` | `student123` |
+| Priya Bangera | `priya.bangera` | `student123` |
 
 ---
 
 ## Features
 
 ### Admin
-
 * Login
-* Create events
-* View all events
-* View registrations for any event
-* View event capacity percentage with color coding
+* Create events (name, date, venue, capacity)
+* View all events with registration count
+* View full registrations list for any event
+* Capacity fill % with color coding: green (below 50%) / amber (50–79%) / red (80%+)
 
 ### Student
-
 * Login
-* View upcoming events sorted by date
-* Register for events
-* Duplicate registration prevention
+* Browse upcoming events sorted by date
+* Register for events (disabled + marked Full when at capacity)
+* Duplicate registration prevention with clear error message
 * View personal registrations
 
 ### System
-
-* Session-based authentication
-* REST API with `/api/*` routes
-* MySQL persistence
-* Responsive UI
-* User-friendly error handling
+* Session-based authentication with protected routes
+* REST API with `/api/*` prefix on all routes
+* MySQL data persistence
+* Error handling on every API call — errors shown to the user clearly
 
 ---
 
 ## Project Structure
 
-```text
+```
 backend/
+  routes/
+    auth.js            # /api/auth — login, logout, current user
+    events.js          # /api/events — list, create, registrations
+    registrations.js   # /api/registrations — register, my registrations
+  middleware/
+    auth.js            # requireLogin and requireAdmin middleware
+  db.js                # MySQL connection
+  server.js            # Express app entry point
+  schema.sql           # Database schema (run once to set up tables)
+  seed.js              # Populates sample users and events
+  .env.example         # Environment variable template
 frontend/
+  css/
+    styles.css
+  js/
+    app.js             # Main app logic and rendering
+    auth.js            # Login / logout / current user calls
+    events.js          # Events API calls + API base URL config
+    registrations.js   # Registration API calls
+  index.html
 README.md
 DECISIONS.md
 ```
 
 ---
 
+## Environment Variables
+
+| Variable | Description | Example |
+|---|---|---|
+| `DB_HOST` | MySQL host | `localhost` |
+| `DB_USER` | MySQL username | `root` |
+| `DB_PASSWORD` | MySQL password | `yourpassword` |
+| `DB_NAME` | Database name | `inspirante_db` |
+| `DB_PORT` | MySQL port | `3306` |
+| `SESSION_SECRET` | Secret for signing sessions | `anyRandomString` |
+| `PORT` | Port the server runs on | `3000` |
+| `NODE_ENV` | Set to `production` when deploying | `development` |
+
+---
+
 ## Useful Commands
 
-Run backend tests:
-
-```powershell
-cd backend
-npm.cmd test
-```
-
-Reset sample data:
-
-```powershell
-cd backend
-npm.cmd run seed
-```
+| Command | What it does |
+|---|---|
+| `npm install` | Install backend dependencies |
+| `npm start` | Start the backend server |
+| `npm run seed` | Reset and repopulate sample data |
+| `npm test` | Syntax check all backend files |
 
 ---
 
 ## Known Limitations
 
-* Passwords are stored in plain text because user registration and password management were outside the scope of this assignment.
-* The default Express memory session store is used and should be replaced for a production application.
+* Passwords are stored in plain text because user registration was not required by the assignment.
+* The default Express memory session store is used — suitable for development and demo, not for large-scale production.
