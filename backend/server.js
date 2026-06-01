@@ -5,6 +5,7 @@ const db = require('./db');
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', 1);
 
 const allowedOrigins = [
   'http://127.0.0.1:5500',
@@ -29,8 +30,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    secure: process.env.NODE_ENV === 'production'
+    sameSite: 'none',
+    secure: true,
+    httpOnly: true
   }
 }));
 
