@@ -110,7 +110,6 @@ function renderLogin() {
           <input name="password" type="password" autocomplete="current-password" required>
         </label>
         <button type="submit">Log in</button>
-        <p class="hint">Try admin / inspirante2026 or asha.rao / student123.</p>
       </form>
     </section>
   `);
@@ -227,8 +226,8 @@ function renderStudent() {
         <div class="card-actions">
           ${isFull ? '<span class="status full">Full</span>' : ''}
           ${isRegistered ? '<span class="status registered">Registered</span>' : ''}
-          <button class="register-button" data-event-id="${event.id}" type="button" ${isFull || isRegistered ? 'disabled' : ''}>
-            Register
+          <button class="register-button" data-event-id="${event.id}" type="button" ${isFull ? 'disabled' : ''}>
+            ${isRegistered ? 'Register again' : 'Register'}
           </button>
         </div>
       </article>
@@ -260,7 +259,7 @@ function renderStudent() {
   });
 }
 
-function renderApp() {
+function App() {
   if (!state.user) {
     renderLogin();
   } else if (state.user.role === 'admin') {
@@ -287,7 +286,7 @@ async function handleLogin(event) {
     setError(error.message);
   }
 
-  renderApp();
+  App();
 }
 
 async function handleLogout() {
@@ -302,7 +301,7 @@ async function handleLogout() {
   state.myRegistrations = [];
   state.selectedEvent = null;
   state.selectedRegistrations = [];
-  renderApp();
+  App();
 }
 
 async function handleCreateEvent(event) {
@@ -324,7 +323,7 @@ async function handleCreateEvent(event) {
     setError(error.message);
   }
 
-  renderApp();
+  App();
 }
 
 async function handleViewRegistrations(eventId) {
@@ -338,7 +337,7 @@ async function handleViewRegistrations(eventId) {
     setError(error.message);
   }
 
-  renderApp();
+  App();
 }
 
 async function handleRegister(eventId) {
@@ -350,7 +349,7 @@ async function handleRegister(eventId) {
     setError(error.message);
   }
 
-  renderApp();
+  App();
 }
 
 async function init() {
@@ -364,9 +363,12 @@ async function init() {
     }
   } catch (error) {
     state.user = null;
+    if (error.message !== 'Not logged in.') {
+      setError(error.message);
+    }
   }
 
-  renderApp();
+  App();
 }
 
 init();
